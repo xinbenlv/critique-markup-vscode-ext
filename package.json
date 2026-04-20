@@ -5,6 +5,7 @@
   "version": "0.0.1",
   "publisher": "xinbenlv",
   "license": "MIT",
+  "icon": "assets/icon.png",
   "homepage": "https://github.com/xinbenlv/critique-markup-vscode-ext#readme",
   "repository": {
     "type": "git",
@@ -13,6 +14,12 @@
   "bugs": {
     "url": "https://github.com/xinbenlv/critique-markup-vscode-ext/issues"
   },
+  "galleryBanner": {
+    "color": "#202430",
+    "theme": "dark"
+  },
+  "markdown": "github",
+  "pricing": "Free",
   "engines": {
     "vscode": "^1.100.0"
   },
