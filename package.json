@@ -102,7 +102,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
-    "visual-regression": "node ./scripts/generate-visual-assets.js"
+    "visual-regression": "node ./scripts/generate-visual-assets.js",
+    "publish:extension": "node ./scripts/publish.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",

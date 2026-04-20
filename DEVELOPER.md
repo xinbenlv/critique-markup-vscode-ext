@@ -86,60 +86,44 @@ You need two separate tokens. One for Microsoft Marketplace, one for OpenVSX. Mi
 
 ### 1. Configure tokens
 
-Put these in your shell env or `~/.env`:
+Put these in your shell environment or `~/.env`:
 
 ```bash
-VSCODE_MARKETPLACE_TOKEN=...
-OPENVSX_TOKEN=...
+VSCODE_MARKETPLACE_TOKEN=***
+OPENVSX_TOKEN=***
 ```
 
-### 2. Publish to VS Code Marketplace
+### 2. Publish with the npm script
 
-Publish directly from the repo root:
+The repo ships a single publish entry point:
 
 ```bash
+set -a
 source ~/.env
-vsce publish --pat "$VSCODE_MARKETPLACE_TOKEN"
+set +a
+npm run publish:extension
 ```
 
-If you only want to upload an already-built package, you can still use `vsce publish` after ensuring `package.json` has the intended version.
+What it does:
 
-After a successful publish, the extension should appear at:
+1. Verifies both required token environment variables exist
+2. Packages the extension into a `.vsix`
+3. Publishes to VS Code Marketplace
+4. Publishes the same package to OpenVSX
 
-```text
-https://marketplace.visualstudio.com/items?itemName=xinbenlv.critique-markup-vscode-ext
-```
+If either token is missing, the script fails immediately and prints exactly what to export.
 
-### 3. Publish to OpenVSX
+### 3. Public listing URLs
 
-If the namespace does not exist yet, create it once:
-
-```bash
-source ~/.env
-ovsx create-namespace xinbenlv -p "$OPENVSX_TOKEN"
-```
-
-Then publish the VSIX:
-
-```bash
-source ~/.env
-ovsx publish critique-markup-vscode-ext-2.0.1.vsix -p "$OPENVSX_TOKEN"
-```
-
-After a successful publish, the extension should appear at:
-
-```text
-https://open-vsx.org/extension/xinbenlv/critique-markup-vscode-ext
-```
+- VS Code Marketplace: https://marketplace.visualstudio.com/items?itemName=xinbenlv.critique-markup-vscode-ext
+- OpenVSX Registry: https://open-vsx.org/extension/xinbenlv/critique-markup-vscode-ext
 
 ## Recommended release checklist
 
 1. Update version with `npm version <new-version> --no-git-tag-version`
 2. Run `npm test`
-3. Run `vsce package --no-dependencies`
-4. Publish to VS Code Marketplace
-5. Publish the generated `.vsix` to OpenVSX
-6. Verify both public listing pages show the new version
+3. Run `source ~/.env && npm run publish:extension`
+4. Verify both public listing pages show the new version
 
 ## Repo guidance
 
