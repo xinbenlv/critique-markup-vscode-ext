@@ -1,8 +1,28 @@
 # Critique Markup
 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/xinbenlv.critique-markup-vscode-ext?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=xinbenlv.critique-markup-vscode-ext)
+[![OpenVSX](https://img.shields.io/open-vsx/v/xinbenlv/critique-markup-vscode-ext?label=OpenVSX)](https://open-vsx.org/extension/xinbenlv/critique-markup-vscode-ext)
+
 Review AI-written Markdown plans in VS Code like an editor, not like a caveman staring at raw markup.
 
 Critique Markup renders **Critic Markup** directly inside the editor with color-coded changes, inline review controls, gutter indicators, and comment hovers — so you can read and revise planning docs without leaving normal Markdown.
+
+> Developer workflow, release steps, and publishing instructions live in [`DEVELOPER.md`](./DEVELOPER.md).
+
+## Install
+
+### From the marketplace UI
+
+Search for `Critique Markup` in VS Code Extensions, or open:
+
+- **VS Code Marketplace**: https://marketplace.visualstudio.com/items?itemName=xinbenlv.critique-markup-vscode-ext
+- **OpenVSX Registry**: https://open-vsx.org/extension/xinbenlv/critique-markup-vscode-ext
+
+### From the command line
+
+```bash
+code --install-extension xinbenlv.critique-markup-vscode-ext
+```
 
 ## What it does
 
@@ -96,4 +116,4 @@ Critique Markup is built for people who:
 
 ## Status
 
-Working prototype with automated VS Code tests and generated visual regression assets checked into the repo.
+Published on both VS Code Marketplace and OpenVSX, with automated VS Code tests and generated visual regression assets checked into the repo.

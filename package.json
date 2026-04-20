@@ -2,7 +2,7 @@
   "name": "critique-markup-vscode-ext",
   "displayName": "Critique Markup",
   "description": "Review AI-written Markdown plans in VS Code with Critic Markup highlights, inline comments, and accept/reject actions.",
-  "version": "0.0.1",
+  "version": "2.0.1",
   "publisher": "xinbenlv",
   "license": "MIT",
   "icon": "assets/icon.png",
