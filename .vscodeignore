@@ -1,5 +1,11 @@
 **/.git/**
 **/.github/**
 **/.vscode-test/**
+**/.tmp-vscode-userdata/**
 **/node_modules/**
 **/*.tsbuildinfo
+src/**
+out/test/**
+scripts/**
+test-fixtures/**
+examples/**

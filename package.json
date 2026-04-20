@@ -1,20 +1,39 @@
 {
   "name": "critique-markup-vscode-ext",
   "displayName": "Critique Markup",
-  "description": "VS Code extension scaffold for Critic Markup review overlays on Markdown coding plans.",
+  "description": "Review AI-written Markdown plans in VS Code with Critic Markup highlights, inline comments, and accept/reject actions.",
   "version": "0.0.1",
   "publisher": "xinbenlv",
+  "license": "MIT",
+  "homepage": "https://github.com/xinbenlv/critique-markup-vscode-ext#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xinbenlv/critique-markup-vscode-ext.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xinbenlv/critique-markup-vscode-ext/issues"
+  },
   "engines": {
     "vscode": "^1.100.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "critic markup",
+    "markdown review",
+    "ai coding plan",
+    "editor review"
   ],
   "activationEvents": [
+    "onLanguage:markdown",
     "onCommand:critiqueMarkup.add",
     "onCommand:critiqueMarkup.delete",
     "onCommand:critiqueMarkup.substitute",
-    "onCommand:critiqueMarkup.commentOver"
+    "onCommand:critiqueMarkup.commentOver",
+    "onCommand:critiqueMarkup.acceptReview",
+    "onCommand:critiqueMarkup.rejectReview"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -34,16 +53,58 @@
       {
         "command": "critiqueMarkup.commentOver",
         "title": "Critique Markup: Comment Over"
+      },
+      {
+        "command": "critiqueMarkup.acceptReview",
+        "title": "Critique Markup: Accept Review"
+      },
+      {
+        "command": "critiqueMarkup.rejectReview",
+        "title": "Critique Markup: Reject Review"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "critiqueMarkup.add",
+        "key": "cmd+alt+=",
+        "mac": "cmd+alt+=",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "critiqueMarkup.delete",
+        "key": "cmd+alt+-",
+        "mac": "cmd+alt+-",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "critiqueMarkup.substitute",
+        "key": "cmd+alt+\\",
+        "mac": "cmd+alt+\\",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "critiqueMarkup.commentOver",
+        "key": "cmd+alt+/",
+        "mac": "cmd+alt+/",
+        "when": "editorTextFocus"
       }
     ]
   },
   "scripts": {
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "compile": "rm -rf out && tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "visual-regression": "node ./scripts/generate-visual-assets.js"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
     "@types/node": "^24.0.0",
     "@types/vscode": "^1.100.0",
+    "@vscode/test-electron": "^2.5.2",
+    "glob": "^11.0.3",
+    "mocha": "^11.7.1",
+    "playwright": "^1.59.1",
     "typescript": "^5.8.3"
   }
 }

@@ -1,0 +1,1 @@
+Drop {--legacy polling--} entirely.
