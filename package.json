@@ -1,0 +1,49 @@
+{
+  "name": "critique-markup-vscode-ext",
+  "displayName": "Critique Markup",
+  "description": "VS Code extension scaffold for Critic Markup review overlays on Markdown coding plans.",
+  "version": "0.0.1",
+  "publisher": "xinbenlv",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:critiqueMarkup.add",
+    "onCommand:critiqueMarkup.delete",
+    "onCommand:critiqueMarkup.substitute",
+    "onCommand:critiqueMarkup.commentOver"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "critiqueMarkup.add",
+        "title": "Critique Markup: Add"
+      },
+      {
+        "command": "critiqueMarkup.delete",
+        "title": "Critique Markup: Delete"
+      },
+      {
+        "command": "critiqueMarkup.substitute",
+        "title": "Critique Markup: Substitute"
+      },
+      {
+        "command": "critiqueMarkup.commentOver",
+        "title": "Critique Markup: Comment Over"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/vscode": "^1.100.0",
+    "typescript": "^5.8.3"
+  }
+}
