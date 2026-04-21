@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.0.3
+
+### Highlights
+
+- Add selection-aware editor right-click commands:
+  - **Comment Over**, **Delete**, and **Substitute** appear when text is selected.
+  - **Add** appears when no text is selected.
+- Replace the top-edge VS Code input strip with a centered in-editor prompt dialog for comment-over and substitute flows.
+- Refresh README screenshots and the overview GIF for the new review states.
+
+### Implementation updates
+
+- Add regression tests for context-menu contributions and centered dialog layout.
+- Add a dedicated accepted-edit fixture for visual regression coverage.
+- Fix the dual-market publish script's missing-env error output before packaging and release.
+
 ## 2.0.2
 
 ### Highlights

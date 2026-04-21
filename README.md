@@ -26,12 +26,20 @@ code --install-extension xinbenlv.critique-markup-vscode-ext
 
 ![Critque Markup overview](assets/screenshots/overview.gif)
 
+### Full-window snapshots
+
+| Full feature review state | Add comment-over result | Accepted edit result |
+| --- | --- | --- |
+| ![Full feature review state](assets/screenshots/01-full-feature.png) | ![Comment-over review state](assets/screenshots/02-adding-comment-over.png) | ![Accepted edit result](assets/screenshots/03-accepting-edits.png) |
+
 ## What it does
 
 - Renders Critic-style additions, deletions, substitutions, and comment-over annotations directly in Markdown.
 - Highlights the annotated span instead of making you stare at raw markup soup.
 - Adds inline **Accept / Reject** actions for each review block.
 - Shows hover cards and gutter indicators for comment-bearing lines.
+- Adds selection-aware editor right-click commands: **Comment Over**, **Delete**, and **Substitute** appear when text is selected, while **Add** appears when nothing is selected.
+- Uses centered in-editor dialogs for prompts instead of VS Code's top-edge input strip.
 - Keeps the workflow inside VS Code instead of bouncing you into a custom viewer.
 
 ## Comment-over syntax

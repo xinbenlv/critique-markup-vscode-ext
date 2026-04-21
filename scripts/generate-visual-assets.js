@@ -148,7 +148,7 @@ async function showHover(page, textRegex) {
   await page.waitForTimeout(1200);
 }
 
-function makeGif(framePattern, outputName, fps = 0.7) {
+function makeGif(framePattern, outputName, fps = 1 / 3) {
   const palettePath = path.join(SCREENSHOT_DIR, '._palette.png');
   execFileSync(
     'ffmpeg',
@@ -161,7 +161,7 @@ function makeGif(framePattern, outputName, fps = 0.7) {
       '-i',
       framePattern,
       '-vf',
-      'fps=1,scale=1280:960:flags=lanczos,palettegen=stats_mode=single',
+      'scale=1280:960:flags=lanczos,palettegen=stats_mode=single',
       '-frames:v',
       '1',
       '-update',
@@ -183,7 +183,7 @@ function makeGif(framePattern, outputName, fps = 0.7) {
       '-i',
       palettePath,
       '-lavfi',
-      'fps=1,scale=1280:960:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=3',
+      'scale=1280:960:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=3',
       '-loop',
       '0',
       path.join(SCREENSHOT_DIR, outputName),
@@ -192,19 +192,19 @@ function makeGif(framePattern, outputName, fps = 0.7) {
   );
 }
 
+async function prepareCommentHoverState(page, textRegex = /Migration/) {
+  await showHover(page, textRegex);
+  await page.waitForTimeout(800);
+}
+
 async function createAddCommentOverScenario(page) {
-  await openFile(page, 'comment-source.md');
-  await page.keyboard.press('Meta+A');
-  await page.waitForTimeout(250);
-  await runCommand(page, 'Critque Markup: Comment Over');
-  await page.keyboard.type('Need better rollback notes');
-  await page.waitForTimeout(200);
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(1800);
+  await openFile(page, 'comment.md');
+  await runCommand(page, 'View: Appearance: Hide Panel');
+  await prepareCommentHoverState(page, /Migration/);
 }
 
 async function createAcceptEditsScenario(page) {
-  await openFile(page, 'review.md');
+  await openFile(page, 'accept.md');
   const acceptLocator = page.getByText('Accept', { exact: true });
   await acceptLocator.first().click({ timeout: 10000 });
   await page.waitForTimeout(1800);
@@ -242,15 +242,21 @@ async function createAcceptEditsScenario(page) {
 
     await openFile(page, 'visual-regression.md');
     await runCommand(page, 'View: Appearance: Hide Panel');
+    await prepareCommentHoverState(page, /Migration/);
     expected.push(await captureOptimizedStill(page, '01-full-feature', { gifFrame: true }));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
 
     await createAddCommentOverScenario(page);
-    await runCommand(page, 'View: Appearance: Hide Panel');
     expected.push(await captureOptimizedStill(page, '02-adding-comment-over', { gifFrame: true }));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
 
     await createAcceptEditsScenario(page);
     await runCommand(page, 'View: Appearance: Hide Panel');
     expected.push(await captureOptimizedStill(page, '03-accepting-edits', { gifFrame: true }));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
 
     await openFile(page, 'add.md');
     await captureCropped(page, /Ship/, 'add.png');
@@ -273,7 +279,7 @@ async function createAcceptEditsScenario(page) {
     await app.close();
   }
 
-  makeGif(path.join(FRAME_DIR, '*.png'), 'overview.gif', 0.65);
+  makeGif(path.join(FRAME_DIR, '*.png'), 'overview.gif');
 
   expected.push(
     'add.png',

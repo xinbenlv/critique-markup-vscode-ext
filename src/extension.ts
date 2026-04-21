@@ -11,6 +11,8 @@ import {
   wrapSelectionText,
 } from './criticMarkup';
 
+import { showPromptDialog } from './promptDialog';
+
 interface WrapCommandArgs {
   replacement?: string;
   comment?: string;
@@ -238,9 +240,12 @@ class CritiqueMarkupController implements vscode.CodeLensProvider, vscode.HoverP
 
 async function getPromptedValue(command: WrapCommand, args: WrapCommandArgs): Promise<WrapCommandArgs | undefined> {
   if (command === 'Substitute' && !args.replacement) {
-    const replacement = await vscode.window.showInputBox({
+    const replacement = await showPromptDialog({
+      title: 'Substitute',
       prompt: 'Replacement text for the current selection',
-      placeHolder: 'new text',
+      placeholder: 'new text',
+      initialValue: '',
+      confirmLabel: 'Apply substitution',
     });
     if (replacement === undefined) {
       return undefined;
@@ -249,9 +254,12 @@ async function getPromptedValue(command: WrapCommand, args: WrapCommandArgs): Pr
   }
 
   if (command === 'CommentOver' && !args.comment) {
-    const comment = await vscode.window.showInputBox({
+    const comment = await showPromptDialog({
+      title: 'Comment Over',
       prompt: 'Review comment',
-      placeHolder: 'Explain the critique',
+      placeholder: 'Explain the critique',
+      initialValue: '',
+      confirmLabel: 'Apply comment',
     });
     if (comment === undefined) {
       return undefined;

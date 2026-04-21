@@ -59,11 +59,11 @@ if (!process.env.OPENVSX_TOKEN) missing.push('OPENVSX_TOKEN');
 if (missing.length > 0) {
   fail(
     `Missing required environment variable${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}.\n`
-    + 'Set both tokens before publishing. Example:\n\n'
-    + '  export VSCODE_MARKETPLACE_TOKEN=...\n'
-    + '  export OPENVSX_TOKEN=...\n\n'
-    + 'Or if you keep them in ~/.env, run:\n\n'
-    + '  set -a && source ~/.env && set +a && npm run publish:extension'
+      + 'Set both tokens before publishing. Example:\n\n'
+      + '  export VSCODE_MARKETPLACE_TOKEN=***\n'
+      + '  export OPENVSX_TOKEN=***\n\n'
+      + 'Or if you keep them in ~/.env, run:\n\n'
+      + '  set -a && source ~/.env && set +a && npm run publish:extension'
   );
 }
 

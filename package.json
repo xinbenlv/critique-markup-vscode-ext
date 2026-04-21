@@ -2,7 +2,7 @@
   "name": "critique-markup-vscode-ext",
   "displayName": "Critque Markup for Markdown Comments",
   "description": "Provides a comment layer for Markdown with UX inspired by Google Docs comments, suggested edits, Microsoft Word revisions and redlining, GitHub inline comments, and suggested code changes.",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "publisher": "xinbenlv",
   "license": "MIT",
   "icon": "assets/icon.png",
@@ -95,7 +95,27 @@
         "mac": "cmd+alt+/",
         "when": "editorTextFocus"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "critiqueMarkup.commentOver",
+          "when": "resourceLangId == markdown && editorHasSelection"
+        },
+        {
+          "command": "critiqueMarkup.delete",
+          "when": "resourceLangId == markdown && editorHasSelection"
+        },
+        {
+          "command": "critiqueMarkup.substitute",
+          "when": "resourceLangId == markdown && editorHasSelection"
+        },
+        {
+          "command": "critiqueMarkup.add",
+          "when": "resourceLangId == markdown && !editorHasSelection"
+        }
+      ]
+    }
   },
   "scripts": {
     "compile": "rm -rf out && tsc -p ./",
