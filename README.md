@@ -24,35 +24,7 @@ code --install-extension xinbenlv.critique-markup-vscode-ext
 
 ## Visual tour
 
-### Full workflow overview
-
 ![Critque Markup overview](assets/screenshots/overview.gif)
-
-### Full feature view
-
-![Full feature view](assets/screenshots/01-full-feature.png)
-
-### Adding comment over
-
-![Adding comment over](assets/screenshots/02-adding-comment-over.png)
-
-### Accepting edits
-
-![Accepting edits](assets/screenshots/03-accepting-edits.png)
-
-### Focused examples
-
-| Addition | Deletion |
-| --- | --- |
-| ![Addition rendering](assets/screenshots/add.png) | ![Deletion rendering](assets/screenshots/delete.png) |
-
-| Substitution | Comment over |
-| --- | --- |
-| ![Substitution rendering](assets/screenshots/substitute.png) | ![Comment highlight](assets/screenshots/comment-over.png) |
-
-| Gutter bubble | Hover bubble |
-| --- | --- |
-| ![Gutter bubble](assets/screenshots/gutter-bubble.png) | ![Tooltip bubble](assets/screenshots/tooltip-bubble.png) |
 
 ## What it does
 

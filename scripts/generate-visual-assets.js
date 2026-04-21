@@ -57,11 +57,23 @@ async function configureWorkbench(page) {
   await dismissNoise(page);
   await runCommand(page, 'View: Close Secondary Side Bar');
   await runCommand(page, 'View: Appearance: Hide Panel');
-  await runCommand(page, 'View: Zoom In');
-  await runCommand(page, 'View: Zoom In');
+  await runCommand(page, 'View: Reset Zoom');
+}
+
+async function setWindowBounds(app) {
+  await app.evaluate(({ BrowserWindow }) => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (!win) {
+      throw new Error('No BrowserWindow available');
+    }
+    win.setBounds({ x: 40, y: 40, width: 1280, height: 960 });
+    win.show();
+    win.focus();
+  });
 }
 
 async function openFile(page, fileName) {
+  await runCommand(page, 'View: Close All Editors');
   await page.keyboard.press('Meta+P');
   await page.waitForTimeout(250);
   await page.keyboard.type(fileName);
@@ -223,6 +235,8 @@ async function createAcceptEditsScenario(page) {
 
   try {
     const page = await app.firstWindow();
+    await setWindowBounds(app);
+    await page.waitForTimeout(1200);
     await page.setViewportSize(VIEWPORT);
     await configureWorkbench(page);
 
