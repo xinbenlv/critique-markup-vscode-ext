@@ -61,7 +61,7 @@ suite('extension integration', () => {
     commentEditor.selection = new vscode.Selection(0, 0, 0, commentDocument.getText().length);
 
     await vscode.commands.executeCommand('critiqueMarkup.commentOver', { comment: 'Need rollback notes' });
-    assert.equal(commentEditor.document.getText(), '{>>Need rollback notes<<}polling');
+    assert.equal(commentEditor.document.getText(), '{==polling==}{>>Need rollback notes<<}');
   });
 
   test('accept command edits the underlying document', async () => {

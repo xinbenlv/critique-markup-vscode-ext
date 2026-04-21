@@ -163,9 +163,13 @@ class CritiqueMarkupController implements vscode.CodeLensProvider, vscode.HoverP
     const offset = document.offsetAt(position);
     const token = parseCriticMarkup(document.getText()).find((candidate) => {
       const presentation = getTokenPresentation(candidate);
-      const ranges = [presentation.primaryRange, presentation.oldRange, presentation.newRange, presentation.targetRange].filter(
-        Boolean
-      ) as Array<{ start: number; end: number }>;
+      const ranges = [
+        presentation.primaryRange,
+        presentation.oldRange,
+        presentation.newRange,
+        presentation.targetRange,
+        presentation.commentRange,
+      ].filter(Boolean) as Array<{ start: number; end: number }>;
       return ranges.some((range) => offset >= range.start && offset <= range.end);
     });
 

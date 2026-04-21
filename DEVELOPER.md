@@ -6,7 +6,7 @@ If you're looking for end-user docs, installation, screenshots, or feature overv
 
 ## Repository purpose
 
-This repository contains the **Critique Markup** VS Code extension published as:
+This repository contains the **Critque Markup for Markdown Comments** VS Code extension published as:
 
 - **VS Code Marketplace**: `xinbenlv.critique-markup-vscode-ext`
 - **OpenVSX Registry**: `xinbenlv.critique-markup-vscode-ext`
@@ -98,10 +98,7 @@ OPENVSX_TOKEN=***
 The repo ships a single publish entry point:
 
 ```bash
-set -a
-source ~/.env
-set +a
-npm run publish:extension
+set -a && source ~/.env && set +a && npm run publish:extension
 ```
 
 What it does:

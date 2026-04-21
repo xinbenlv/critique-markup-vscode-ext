@@ -63,7 +63,7 @@ if (missing.length > 0) {
     + '  export VSCODE_MARKETPLACE_TOKEN=...\n'
     + '  export OPENVSX_TOKEN=...\n\n'
     + 'Or if you keep them in ~/.env, run:\n\n'
-    + '  source ~/.env && npm run publish:extension'
+    + '  set -a && source ~/.env && set +a && npm run publish:extension'
   );
 }
 

@@ -12,7 +12,7 @@ suite('critic markup parser', () => {
       'Ship {++new cache++} before launch.',
       'Drop {--legacy polling--} entirely.',
       'Use {~~polling~>events~~} for updates.',
-      '{>>Need better rollback notes<<}Migration section',
+      '{==Migration section==}{>>Need better rollback notes<<}',
     ].join('\n');
 
     const tokens = parseCriticMarkup(text);
@@ -42,9 +42,9 @@ suite('critic markup parser', () => {
     assert.equal(applyReviewAction('Use {~~old~>new~~} flow.', substitution, 'accept').text, 'Use new flow.');
     assert.equal(applyReviewAction('Use {~~old~>new~~} flow.', substitution, 'reject').text, 'Use old flow.');
 
-    const comment = parseCriticMarkup('{>>too vague<<}Rollout plan')[0];
-    assert.equal(applyReviewAction('{>>too vague<<}Rollout plan', comment, 'accept').text, 'Rollout plan');
-    assert.equal(applyReviewAction('{>>too vague<<}Rollout plan', comment, 'reject').text, '');
+    const comment = parseCriticMarkup('{==Rollout plan==}{>>too vague<<}')[0];
+    assert.equal(applyReviewAction('{==Rollout plan==}{>>too vague<<}', comment, 'accept').text, 'Rollout plan');
+    assert.equal(applyReviewAction('{==Rollout plan==}{>>too vague<<}', comment, 'reject').text, '');
   });
 
   test('wrap selection helper creates expected critic markup syntax', () => {
@@ -56,7 +56,7 @@ suite('critic markup parser', () => {
     );
     assert.equal(
       wrapSelectionText('CommentOver', 'Migration section', { comment: 'Need rollback notes' }),
-      '{>>Need rollback notes<<}Migration section'
+      '{==Migration section==}{>>Need rollback notes<<}'
     );
   });
 });

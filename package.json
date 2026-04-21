@@ -1,8 +1,8 @@
 {
   "name": "critique-markup-vscode-ext",
-  "displayName": "Critique Markup",
-  "description": "Review AI-written Markdown plans in VS Code with Critic Markup highlights, inline comments, and accept/reject actions.",
-  "version": "2.0.1",
+  "displayName": "Critque Markup for Markdown Comments",
+  "description": "Provides a comment layer for Markdown with UX inspired by Google Docs comments, suggested edits, Microsoft Word revisions and redlining, GitHub inline comments, and suggested code changes.",
+  "version": "2.0.2",
   "publisher": "xinbenlv",
   "license": "MIT",
   "icon": "assets/icon.png",
@@ -47,27 +47,27 @@
     "commands": [
       {
         "command": "critiqueMarkup.add",
-        "title": "Critique Markup: Add"
+        "title": "Critque Markup: Add"
       },
       {
         "command": "critiqueMarkup.delete",
-        "title": "Critique Markup: Delete"
+        "title": "Critque Markup: Delete"
       },
       {
         "command": "critiqueMarkup.substitute",
-        "title": "Critique Markup: Substitute"
+        "title": "Critque Markup: Substitute"
       },
       {
         "command": "critiqueMarkup.commentOver",
-        "title": "Critique Markup: Comment Over"
+        "title": "Critque Markup: Comment Over"
       },
       {
         "command": "critiqueMarkup.acceptReview",
-        "title": "Critique Markup: Accept Review"
+        "title": "Critque Markup: Accept Review"
       },
       {
         "command": "critiqueMarkup.rejectReview",
-        "title": "Critique Markup: Reject Review"
+        "title": "Critque Markup: Reject Review"
       }
     ],
     "keybindings": [

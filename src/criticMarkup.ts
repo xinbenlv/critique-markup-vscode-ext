@@ -58,8 +58,8 @@ const TOKEN_PATTERNS: Array<{
   },
   {
     kind: 'comment',
-    regex: /\{>>([\s\S]*?)<<\}([^\n\r]*)/g,
-    mapMatch: (match) => ({ text: match[2], commentText: match[1] }),
+    regex: /\{==([\s\S]*?)==\}\{>>([\s\S]*?)<<\}/g,
+    mapMatch: (match) => ({ text: match[1], commentText: match[2] }),
   },
 ];
 
@@ -132,7 +132,7 @@ export function wrapSelectionText(
     case 'Substitute':
       return `{~~${selection || 'old text'}~>${options.replacement || 'new text'}~~}`;
     case 'CommentOver':
-      return `{>>${options.comment || 'Review comment'}<<}${selection || 'commented text'}`;
+      return `{==${selection || 'commented text'}==}{>>${options.comment || 'Review comment'}<<}`;
     default:
       return selection;
   }
@@ -170,16 +170,16 @@ export function getTokenPresentation(token: CriticMarkupToken): TokenPresentatio
       };
     }
     case 'comment': {
-      const targetStart = token.start + 6 + (token.commentText?.length ?? 0);
       const targetRange = {
-        start: targetStart,
-        end: token.end,
+        start: token.start + 3,
+        end: token.start + 3 + token.text.length,
       };
+      const commentStart = targetRange.end + 6;
       return {
         primaryRange: targetRange,
         commentRange: {
-          start: token.start + 3,
-          end: token.start + 3 + (token.commentText?.length ?? 0),
+          start: commentStart,
+          end: commentStart + (token.commentText?.length ?? 0),
         },
         targetRange,
         inlineBubbleText: `💬 ${token.commentText ?? ''}`,

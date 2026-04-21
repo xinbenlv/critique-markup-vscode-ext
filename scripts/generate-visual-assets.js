@@ -10,8 +10,10 @@ const CODE_BIN = path.join(
   '.vscode-test/vscode-darwin-arm64-1.116.0/Visual Studio Code.app/Contents/MacOS/Code'
 );
 const SCREENSHOT_DIR = path.join(REPO_ROOT, 'assets', 'screenshots');
+const FRAME_DIR = path.join(SCREENSHOT_DIR, '.gif-frames');
 const USER_DATA_DIR = path.join(REPO_ROOT, '.tmp-vscode-userdata');
 const WORKSPACE_DIR = path.join(os.tmpdir(), 'critique-markup-fixtures');
+const VIEWPORT = { width: 1280, height: 960 };
 
 function resetDir(dir) {
   fs.rmSync(dir, { recursive: true, force: true });
@@ -41,19 +43,22 @@ async function dismissNoise(page) {
   }
 }
 
+async function runCommand(page, commandText) {
+  await page.keyboard.press('F1');
+  await page.waitForTimeout(350);
+  await page.keyboard.type(commandText);
+  await page.waitForTimeout(350);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(500);
+}
+
 async function configureWorkbench(page) {
   await page.waitForTimeout(6000);
   await dismissNoise(page);
-  await page.keyboard.press('F1');
-  await page.waitForTimeout(300);
-  await page.keyboard.type('View: Close Secondary Side Bar');
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
-  await page.keyboard.press('F1');
-  await page.waitForTimeout(300);
-  await page.keyboard.type('View: Close Panel');
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
+  await runCommand(page, 'View: Close Secondary Side Bar');
+  await runCommand(page, 'View: Appearance: Hide Panel');
+  await runCommand(page, 'View: Zoom In');
+  await runCommand(page, 'View: Zoom In');
 }
 
 async function openFile(page, fileName) {
@@ -62,7 +67,7 @@ async function openFile(page, fileName) {
   await page.keyboard.type(fileName);
   await page.waitForTimeout(250);
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(1600);
+  await page.waitForTimeout(1800);
 }
 
 async function lineClip(page, textRegex, options = {}) {
@@ -77,33 +82,62 @@ async function lineClip(page, textRegex, options = {}) {
   return {
     x: Math.max(0, Math.floor(box.x - padX)),
     y: Math.max(0, Math.floor(box.y - padY)),
-    width: Math.floor(width),
-    height: Math.floor(height),
+    width: Math.min(Math.floor(width), VIEWPORT.width),
+    height: Math.min(Math.floor(height), VIEWPORT.height),
   };
+}
+
+async function capturePng(page, outputName, options = {}) {
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, outputName), clip: options.clip });
 }
 
 async function captureCropped(page, textRegex, outputName, options = {}) {
   const clip = await lineClip(page, textRegex, options);
-  await page.screenshot({ path: path.join(SCREENSHOT_DIR, outputName), clip });
+  await capturePng(page, outputName, { clip });
 }
 
-async function captureFull(page, outputName) {
-  await page.screenshot({ path: path.join(SCREENSHOT_DIR, outputName) });
+async function captureOptimizedStill(page, baseName, options = {}) {
+  const pngTemp = path.join(SCREENSHOT_DIR, `${baseName}.tmp.png`);
+  const jpgTemp = path.join(SCREENSHOT_DIR, `${baseName}.tmp.jpg`);
+  const pngPath = path.join(SCREENSHOT_DIR, `${baseName}.png`);
+  const jpgPath = path.join(SCREENSHOT_DIR, `${baseName}.jpg`);
+
+  await page.screenshot({ path: pngTemp, clip: options.clip });
+
+  if (options.gifFrame) {
+    fs.copyFileSync(pngTemp, path.join(FRAME_DIR, `${baseName}.png`));
+  }
+
+  await page.screenshot({ path: jpgTemp, clip: options.clip, type: 'jpeg', quality: 94 });
+
+  const pngSize = fs.statSync(pngTemp).size;
+  const jpgSize = fs.statSync(jpgTemp).size;
+  const keepJpg = jpgSize < pngSize;
+
+  fs.rmSync(pngPath, { force: true });
+  fs.rmSync(jpgPath, { force: true });
+
+  if (keepJpg) {
+    fs.renameSync(jpgTemp, jpgPath);
+    fs.rmSync(pngTemp, { force: true });
+    return path.basename(jpgPath);
+  }
+
+  fs.renameSync(pngTemp, pngPath);
+  fs.rmSync(jpgTemp, { force: true });
+  return path.basename(pngPath);
 }
 
 async function showHover(page, textRegex) {
   const locator = page.getByText(textRegex).first();
   await locator.click();
   await page.waitForTimeout(300);
-  await page.keyboard.press('F1');
-  await page.waitForTimeout(250);
-  await page.keyboard.type('Show Hover');
-  await page.waitForTimeout(250);
-  await page.keyboard.press('Enter');
+  await runCommand(page, 'Show Hover');
   await page.waitForTimeout(1200);
 }
 
-function makeGif(inputPattern, outputName, fps = 1) {
+function makeGif(framePattern, outputName, fps = 0.7) {
+  const palettePath = path.join(SCREENSHOT_DIR, '._palette.png');
   execFileSync(
     'ffmpeg',
     [
@@ -113,17 +147,60 @@ function makeGif(inputPattern, outputName, fps = 1) {
       '-pattern_type',
       'glob',
       '-i',
-      inputPattern,
+      framePattern,
       '-vf',
-      'scale=1200:-1:flags=lanczos',
+      'fps=1,scale=1280:960:flags=lanczos,palettegen=stats_mode=single',
+      '-frames:v',
+      '1',
+      '-update',
+      '1',
+      palettePath,
+    ],
+    { stdio: 'inherit' }
+  );
+  execFileSync(
+    'ffmpeg',
+    [
+      '-y',
+      '-framerate',
+      String(fps),
+      '-pattern_type',
+      'glob',
+      '-i',
+      framePattern,
+      '-i',
+      palettePath,
+      '-lavfi',
+      'fps=1,scale=1280:960:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=3',
+      '-loop',
+      '0',
       path.join(SCREENSHOT_DIR, outputName),
     ],
     { stdio: 'inherit' }
   );
 }
 
+async function createAddCommentOverScenario(page) {
+  await openFile(page, 'comment-source.md');
+  await page.keyboard.press('Meta+A');
+  await page.waitForTimeout(250);
+  await runCommand(page, 'Critque Markup: Comment Over');
+  await page.keyboard.type('Need better rollback notes');
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(1800);
+}
+
+async function createAcceptEditsScenario(page) {
+  await openFile(page, 'review.md');
+  const acceptLocator = page.getByText('Accept', { exact: true });
+  await acceptLocator.first().click({ timeout: 10000 });
+  await page.waitForTimeout(1800);
+}
+
 (async () => {
   resetDir(SCREENSHOT_DIR);
+  resetDir(FRAME_DIR);
   copyFixtures();
   resetDir(USER_DATA_DIR);
 
@@ -142,10 +219,24 @@ function makeGif(inputPattern, outputName, fps = 1) {
     env: { ...process.env, NODE_ENV: 'test' },
   });
 
+  const expected = [];
+
   try {
     const page = await app.firstWindow();
-    await page.setViewportSize({ width: 1600, height: 980 });
+    await page.setViewportSize(VIEWPORT);
     await configureWorkbench(page);
+
+    await openFile(page, 'visual-regression.md');
+    await runCommand(page, 'View: Appearance: Hide Panel');
+    expected.push(await captureOptimizedStill(page, '01-full-feature', { gifFrame: true }));
+
+    await createAddCommentOverScenario(page);
+    await runCommand(page, 'View: Appearance: Hide Panel');
+    expected.push(await captureOptimizedStill(page, '02-adding-comment-over', { gifFrame: true }));
+
+    await createAcceptEditsScenario(page);
+    await runCommand(page, 'View: Appearance: Hide Panel');
+    expected.push(await captureOptimizedStill(page, '03-accepting-edits', { gifFrame: true }));
 
     await openFile(page, 'add.md');
     await captureCropped(page, /Ship/, 'add.png');
@@ -161,30 +252,24 @@ function makeGif(inputPattern, outputName, fps = 1) {
     await captureCropped(page, /Migration/, 'gutter-bubble.png', { padX: 170, width: 1040 });
 
     await showHover(page, /Migration/);
-    await captureFull(page, 'tooltip-bubble.png');
+    await capturePng(page, 'tooltip-bubble.png');
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);
-
-    await openFile(page, 'visual-regression.md');
-    await captureFull(page, 'visual-regression.png');
   } finally {
     await app.close();
   }
 
-  makeGif(path.join(SCREENSHOT_DIR, '{add,delete,substitute,comment-over,tooltip-bubble}.png'), 'overview.gif', 0.8);
-  makeGif(path.join(SCREENSHOT_DIR, '{comment-over,gutter-bubble,tooltip-bubble}.png'), 'comment-workflow.gif', 0.8);
+  makeGif(path.join(FRAME_DIR, '*.png'), 'overview.gif', 0.65);
 
-  const expected = [
+  expected.push(
     'add.png',
     'delete.png',
     'substitute.png',
     'comment-over.png',
     'gutter-bubble.png',
     'tooltip-bubble.png',
-    'visual-regression.png',
-    'overview.gif',
-    'comment-workflow.gif',
-  ];
+    'overview.gif'
+  );
 
   for (const file of expected) {
     const fullPath = path.join(SCREENSHOT_DIR, file);
@@ -193,6 +278,9 @@ function makeGif(inputPattern, outputName, fps = 1) {
     }
   }
 
+  fs.rmSync(FRAME_DIR, { recursive: true, force: true });
+  fs.rmSync(path.join(SCREENSHOT_DIR, '._palette.png'), { force: true });
+  fs.rmSync(USER_DATA_DIR, { recursive: true, force: true });
   console.log('Generated visual assets:', expected.join(', '));
 })().catch((error) => {
   console.error(error);
