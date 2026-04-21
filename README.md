@@ -3,7 +3,7 @@
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/xinbenlv.critique-markup-vscode-ext?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=xinbenlv.critique-markup-vscode-ext)
 [![OpenVSX](https://img.shields.io/open-vsx/v/xinbenlv/critique-markup-vscode-ext?label=OpenVSX)](https://open-vsx.org/extension/xinbenlv/critique-markup-vscode-ext)
 
-A Markdown comment layer for VS Code with UX closer to Google Docs comments, suggested edits, Microsoft Word revisions and redlining, and GitHub inline review comments or suggested code changes.
+A Markdown comment layer for VS Code with UX closer to Google Docs comments, suggested edits, Microsoft Word revisions and redlining, and GitHub inline review comments or suggested code changes. It is especially useful for giving precise comments and review feedback on LLM-generated plans, specs, and implementation notes.
 
 > Developer workflow, release steps, and publishing instructions live in [`DEVELOPER.md`](./DEVELOPER.md).
 
@@ -87,7 +87,8 @@ Most Markdown review flows are clunky:
 
 - raw Critic Markup is noisy
 - separate custom viewers are a pain
-- AI-generated docs are fast to create but annoying to review
+- LLM-generated plans are fast to create but need precise, low-friction human review
+- giving review feedback on AI-written Markdown should be as easy as commenting on a doc or reviewing a PR
 
 This extension keeps review where it belongs: inside the editor you already use.
 
