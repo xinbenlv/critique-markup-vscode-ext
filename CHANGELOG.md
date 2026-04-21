@@ -20,7 +20,7 @@
 
 ### Highlights
 
-- Rename the extension presentation to **Critque Markup for Markdown Comments**.
+- Rename the extension presentation to **Critique Markup for Markdown Comments**.
 - Reposition the extension around Markdown comments, suggested edits, Microsoft Word–style revisions/redlining, and GitHub-style inline review.
 - Fix comment-over syntax to use `{==highlighted content==}{>>comment<<}`.
 

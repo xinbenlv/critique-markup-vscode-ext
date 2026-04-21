@@ -1,4 +1,4 @@
-# Critque Markup for Markdown Comments
+# Critique Markup for Markdown Comments
 
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/xinbenlv.critique-markup-vscode-ext?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=xinbenlv.critique-markup-vscode-ext)
 [![OpenVSX](https://img.shields.io/open-vsx/v/xinbenlv/critique-markup-vscode-ext?label=OpenVSX)](https://open-vsx.org/extension/xinbenlv/critique-markup-vscode-ext)
@@ -11,7 +11,7 @@ A Markdown comment layer for VS Code with UX closer to Google Docs comments, sug
 
 ### From the marketplace UI
 
-Search for `Critque Markup for Markdown Comments` in VS Code Extensions, or open:
+Search for `Critique Markup for Markdown Comments` in VS Code Extensions, or open:
 
 - **VS Code Marketplace**: https://marketplace.visualstudio.com/items?itemName=xinbenlv.critique-markup-vscode-ext
 - **OpenVSX Registry**: https://open-vsx.org/extension/xinbenlv/critique-markup-vscode-ext
@@ -24,13 +24,15 @@ code --install-extension xinbenlv.critique-markup-vscode-ext
 
 ## Visual tour
 
-![Critque Markup overview](assets/screenshots/overview.gif)
+![Critique Markup overview](assets/screenshots/overview.gif)
 
 ### Full-window snapshots
 
 | Full feature review state | Add comment-over result | Accepted edit result |
 | --- | --- | --- |
 | ![Full feature review state](assets/screenshots/01-full-feature.png) | ![Comment-over review state](assets/screenshots/02-adding-comment-over.png) | ![Accepted edit result](assets/screenshots/03-accepting-edits.png) |
+| LLM plan review state | Right-click comment command | |
+| ![LLM plan review state](assets/screenshots/04-llm-plan-review.png) | ![Right-click Comment Over command](assets/screenshots/05-right-click-comment-over.png) | |
 
 ## What it does
 
@@ -67,12 +69,12 @@ Use {~~polling~>events~~} for updates.
 
 ## Commands
 
-- `Critque Markup: Add`
-- `Critque Markup: Delete`
-- `Critque Markup: Substitute`
-- `Critque Markup: Comment Over`
-- `Critque Markup: Accept Review`
-- `Critque Markup: Reject Review`
+- `Critique Markup: Add`
+- `Critique Markup: Delete`
+- `Critique Markup: Substitute`
+- `Critique Markup: Comment Over`
+- `Critique Markup: Accept Review`
+- `Critique Markup: Reject Review`
 
 ## Default shortcuts (macOS)
 
@@ -94,7 +96,7 @@ This extension keeps review where it belongs: inside the editor you already use.
 
 ## Best fit
 
-Critque Markup for Markdown Comments is built for people who:
+Critique Markup for Markdown Comments is built for people who:
 
 - review Markdown plans, specs, and design docs
 - iterate with AI on architecture or implementation notes

@@ -148,6 +148,68 @@ async function showHover(page, textRegex) {
   await page.waitForTimeout(1200);
 }
 
+async function closePanel(page) {
+  await page.mouse.click(1258, 685);
+  await page.waitForTimeout(500);
+}
+
+async function showContextMenuOverlay(page) {
+  await page.evaluate(() => {
+    document.getElementById('critique-markup-context-menu-demo')?.remove();
+
+    const menu = document.createElement('div');
+    menu.id = 'critique-markup-context-menu-demo';
+    menu.setAttribute('aria-label', 'Editor context menu');
+    menu.style.position = 'fixed';
+    menu.style.left = '650px';
+    menu.style.top = '528px';
+    menu.style.width = '284px';
+    menu.style.padding = '6px 0';
+    menu.style.border = '1px solid rgba(120, 135, 160, 0.45)';
+    menu.style.borderRadius = '4px';
+    menu.style.background = '#252526';
+    menu.style.boxShadow = '0 12px 32px rgba(0, 0, 0, 0.45)';
+    menu.style.color = '#cccccc';
+    menu.style.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    menu.style.zIndex = '999999';
+
+    const items = [
+      'Cut',
+      'Copy',
+      'Paste',
+      '',
+      'Critique Markup: Comment Over',
+      'Critique Markup: Delete',
+      'Critique Markup: Substitute',
+    ];
+
+    for (const item of items) {
+      if (!item) {
+        const separator = document.createElement('div');
+        separator.style.height = '1px';
+        separator.style.margin = '5px 0';
+        separator.style.background = 'rgba(255, 255, 255, 0.12)';
+        menu.append(separator);
+        continue;
+      }
+
+      const row = document.createElement('div');
+      row.textContent = item;
+      row.style.height = '26px';
+      row.style.lineHeight = '26px';
+      row.style.padding = '0 14px';
+      row.style.whiteSpace = 'nowrap';
+      if (item === 'Critique Markup: Comment Over') {
+        row.style.background = '#094771';
+        row.style.color = '#ffffff';
+      }
+      menu.append(row);
+    }
+
+    document.body.append(menu);
+  });
+}
+
 function makeGif(framePattern, outputName, fps = 1 / 3) {
   const palettePath = path.join(SCREENSHOT_DIR, '._palette.png');
   execFileSync(
@@ -208,6 +270,36 @@ async function createAcceptEditsScenario(page) {
   const acceptLocator = page.getByText('Accept', { exact: true });
   await acceptLocator.first().click({ timeout: 10000 });
   await page.waitForTimeout(1800);
+  await page.keyboard.press('Meta+S');
+  await page.waitForTimeout(500);
+}
+
+async function createPlanReviewScenario(page) {
+  console.log('Preparing LLM plan review frame');
+  await openFile(page, 'plan.md');
+  await runCommand(page, 'View: Appearance: Hide Panel');
+  await closePanel(page);
+  await page.waitForTimeout(1800);
+}
+
+async function createContextMenuScenario(page) {
+  console.log('Preparing right-click context menu frame');
+  await openFile(page, 'plan.md');
+  await runCommand(page, 'View: Appearance: Hide Panel');
+  await closePanel(page);
+
+  const startX = 415;
+  const endX = 900;
+  const y = 540;
+
+  await page.mouse.move(startX, y);
+  await page.mouse.down();
+  await page.mouse.move(endX, y, { steps: 12 });
+  await page.mouse.up();
+  await page.waitForTimeout(500);
+  await page.mouse.click((startX + endX) / 2, y, { button: 'right' });
+  await showContextMenuOverlay(page);
+  await page.waitForTimeout(1200);
 }
 
 (async () => {
@@ -222,6 +314,7 @@ async function createAcceptEditsScenario(page) {
       WORKSPACE_DIR,
       '--user-data-dir=' + USER_DATA_DIR,
       '--extensionDevelopmentPath=' + REPO_ROOT,
+      '--disable-extensions',
       '--skip-welcome',
       '--skip-release-notes',
       '--disable-workspace-trust',
@@ -243,18 +336,33 @@ async function createAcceptEditsScenario(page) {
     await openFile(page, 'visual-regression.md');
     await runCommand(page, 'View: Appearance: Hide Panel');
     await prepareCommentHoverState(page, /Migration/);
+    console.log('Capturing frame 01');
     expected.push(await captureOptimizedStill(page, '01-full-feature', { gifFrame: true }));
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);
 
     await createAddCommentOverScenario(page);
+    console.log('Capturing frame 02');
     expected.push(await captureOptimizedStill(page, '02-adding-comment-over', { gifFrame: true }));
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);
 
     await createAcceptEditsScenario(page);
     await runCommand(page, 'View: Appearance: Hide Panel');
+    console.log('Capturing frame 03');
     expected.push(await captureOptimizedStill(page, '03-accepting-edits', { gifFrame: true }));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+
+    await createPlanReviewScenario(page);
+    console.log('Capturing frame 04');
+    expected.push(await captureOptimizedStill(page, '04-llm-plan-review', { gifFrame: true }));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+
+    await createContextMenuScenario(page);
+    console.log('Capturing frame 05');
+    expected.push(await captureOptimizedStill(page, '05-right-click-comment-over', { gifFrame: true }));
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);
 

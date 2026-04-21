@@ -1,6 +1,6 @@
 {
   "name": "critique-markup-vscode-ext",
-  "displayName": "Critque Markup for Markdown Comments",
+  "displayName": "Critique Markup for Markdown Comments",
   "description": "Provides a comment layer for Markdown with UX inspired by Google Docs comments, suggested edits, Microsoft Word revisions and redlining, GitHub inline comments, and suggested code changes.",
   "version": "2.0.3",
   "publisher": "xinbenlv",
@@ -47,27 +47,27 @@
     "commands": [
       {
         "command": "critiqueMarkup.add",
-        "title": "Critque Markup: Add"
+        "title": "Critique Markup: Add"
       },
       {
         "command": "critiqueMarkup.delete",
-        "title": "Critque Markup: Delete"
+        "title": "Critique Markup: Delete"
       },
       {
         "command": "critiqueMarkup.substitute",
-        "title": "Critque Markup: Substitute"
+        "title": "Critique Markup: Substitute"
       },
       {
         "command": "critiqueMarkup.commentOver",
-        "title": "Critque Markup: Comment Over"
+        "title": "Critique Markup: Comment Over"
       },
       {
         "command": "critiqueMarkup.acceptReview",
-        "title": "Critque Markup: Accept Review"
+        "title": "Critique Markup: Accept Review"
       },
       {
         "command": "critiqueMarkup.rejectReview",
-        "title": "Critque Markup: Reject Review"
+        "title": "Critique Markup: Reject Review"
       }
     ],
     "keybindings": [

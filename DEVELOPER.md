@@ -6,7 +6,7 @@ If you're looking for end-user docs, installation, screenshots, or feature overv
 
 ## Repository purpose
 
-This repository contains the **Critque Markup for Markdown Comments** VS Code extension published as:
+This repository contains the **Critique Markup for Markdown Comments** VS Code extension published as:
 
 - **VS Code Marketplace**: `xinbenlv.critique-markup-vscode-ext`
 - **OpenVSX Registry**: `xinbenlv.critique-markup-vscode-ext`
